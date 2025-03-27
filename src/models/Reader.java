@@ -6,9 +6,11 @@ import java.util.List;
 public class Reader extends Person{
     private List<Book> borrowedBooks;
     private static final int MAX_BOOKS = 5;
+    protected String email;
 
     public Reader(int id, String name, String email) {
-        super(id, name, email);
+        super(id, name);
+        this.email = email;
         this.borrowedBooks = new ArrayList<>();
     }
 
