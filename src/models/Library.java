@@ -83,18 +83,17 @@ public class Library {
         addBook(book);
     }
 
-    public void lendBook(int bookId, int readerId) {
+    public boolean lendBook(int bookId, int readerId) {
         Book book = findBookById(bookId);
         Reader reader = findReaderById(readerId);
-        if (book != null && reader != null) {
+        if (book != null && reader != null && book.isAvailable()) {
             if (reader.borrowBook(book)) {
-                System.out.println("Book lent successfully.");
-            } else {
-                System.out.println("Book could not be lent.");
+                Invoice invoice = new Invoice(book.getId(), reader, book, book.getPrice());
+                invoice.generateInvoice();
+                return true;
             }
-        } else {
-            System.out.println("Book or Reader not found.");
         }
+        return false;
     }
 
     public void takeBackBook(int bookId, int readerId) {
@@ -102,9 +101,8 @@ public class Library {
         Reader reader = findReaderById(readerId);
         if (book != null && reader != null) {
             reader.returnBook(book);
-            System.out.println("Book returned successfully.");
-        } else {
-            System.out.println("Book or Reader not found.");
+            Invoice invoice = new Invoice(book.getId(), reader, book, book.getPrice());
+            invoice.refundInvoice();
         }
     }
 
