@@ -15,24 +15,6 @@ public class Librarian extends Person{
         return password;
     }
 
-    public Book searchBook(List<Book> books, String title){
-        for(Book book : books){
-            if(book.getTitle().equalsIgnoreCase(title)){
-                return book;
-            }
-        }
-        return null;
-    }
-
-    public boolean verifyMember(List<Reader> readers, int memberId){
-        for(Reader reader : readers){
-            if(reader.getId() == memberId){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean issueBook(Book book, Reader reader){
         return reader.borrowBook(book);
     }

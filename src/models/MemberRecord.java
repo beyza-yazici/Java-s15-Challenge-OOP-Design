@@ -56,7 +56,7 @@ public class MemberRecord {
     }
 
     public void incBookIssued() {
-        if (noBooksIssued <= maxBookLimit) {
+        if (noBooksIssued < maxBookLimit) {
             noBooksIssued++;
         } else {
             System.out.println("Cannot issue more than " + maxBookLimit + " books.");
