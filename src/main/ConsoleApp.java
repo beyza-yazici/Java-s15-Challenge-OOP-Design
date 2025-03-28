@@ -1,21 +1,28 @@
 package main;
 
-import models.Book;
-import models.Invoice;
-import models.Library;
-import models.Reader;
+import models.*;
+import repository.BookRepository;
+import repository.ReaderRepository;
+import repository.TransactionRepository;
+import services.LibraryManagementSystem;
+import services.LibraryService;
+import services.TransactionService;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
 public class ConsoleApp {
 
-    private static Library library = new Library();
+    private static BookRepository bookRepository = new BookRepository();
+    private static ReaderRepository readerRepository = new ReaderRepository();
+    private static LibraryService libraryService = new LibraryService(bookRepository, readerRepository);
+    private static TransactionService transactionService = new TransactionService(new TransactionRepository());
     private static Scanner scanner = new Scanner(System.in);
+    private static LibraryManagementSystem libraryManagementSystem = new LibraryManagementSystem(bookRepository, readerRepository);
 
     public static void main(String[] args) {
         boolean exit = false;
-        while(!exit){
+        while (!exit) {
             System.out.println("Library Automation");
             System.out.println("1. Add Book");
             System.out.println("2. Search Book");
@@ -36,7 +43,7 @@ public class ConsoleApp {
                 case 2 -> searchBook();
                 case 3 -> lendBook();
                 case 4 -> returnBook();
-                case 5 -> library.listAllBooks();
+                case 5 -> listAllBooks();
                 case 6 -> addReader();
                 case 7 -> listAllReaders();
                 case 8 -> viewInvoices();
@@ -63,7 +70,7 @@ public class ConsoleApp {
         String edition = scanner.nextLine();
 
         Book book = new Book(id, title, author, genre, price, LocalDate.now(), edition);
-        library.addBook(book);
+        LibraryManagementSystem.addBook(book);
     }
 
     private static void searchBook() {
@@ -80,17 +87,17 @@ public class ConsoleApp {
             case 1 -> {
                 System.out.print("Title: ");
                 String title = scanner.nextLine();
-                library.findBooksByTitle(title).forEach(System.out::println);
+                bookRepository.findBooksByTitle(title).forEach(System.out::println);
             }
             case 2 -> {
                 System.out.print("Author: ");
                 String author = scanner.nextLine();
-                library.findBooksByAuthor(author).forEach(System.out::println);
+                bookRepository.findBooksByAuthor(author).forEach(System.out::println);
             }
             case 3 -> {
                 System.out.print("Genre: ");
                 String genre = scanner.nextLine();
-                library.findBooksByGenre(genre).forEach(System.out::println);
+                bookRepository.findBooksByGenre(genre).forEach(System.out::println);
             }
             default -> System.out.println("Invalid choice. Please try again.");
         }
@@ -101,8 +108,10 @@ public class ConsoleApp {
         int bookId = scanner.nextInt();
         System.out.print("Reader ID: ");
         int readerId = scanner.nextInt();
-        if (library.lendBook(bookId, readerId)) {
+        if (libraryService.borrowBook(bookId, readerId)) {
             System.out.println("Book lent successfully.");
+            Transaction transaction = new Transaction(bookId, bookRepository.findBooksById(bookId), readerRepository.findReaderById(readerId), LocalDate.now());
+            transactionService.recordTransaction(transaction);
         } else {
             System.out.println("Failed to lend book.");
         }
@@ -113,11 +122,15 @@ public class ConsoleApp {
         int bookId = scanner.nextInt();
         System.out.print("Reader ID: ");
         int readerId = scanner.nextInt();
-        library.takeBackBook(bookId, readerId);
+        libraryService.returnBook(bookId, readerId);
         System.out.println("Book returned successfully.");
     }
 
-    private static void addReader(){
+    private static void listAllBooks() {
+        bookRepository.findAll().forEach(System.out::println);
+    }
+
+    private static void addReader() {
         System.out.print("Reader ID: ");
         int id = scanner.nextInt();
         scanner.nextLine();
@@ -127,19 +140,19 @@ public class ConsoleApp {
         String email = scanner.nextLine();
 
         Reader reader = new Reader(id, name, email);
-        library.addReader(reader);
+        LibraryManagementSystem.addReader(reader);
         System.out.println("Reader added: " + reader);
     }
 
-    private static void listAllReaders(){
-        library.getReaders().forEach(System.out::println);
+    private static void listAllReaders() {
+        readerRepository.findAll().forEach(System.out::println);
     }
 
-    private static void viewInvoices(){
+    private static void viewInvoices() {
         System.out.print("Reader ID: ");
         int readerId = scanner.nextInt();
-        Reader reader = library.findReaderById(readerId);
-        if (reader != null){
+        Reader reader = readerRepository.findReaderById(readerId);
+        if (reader != null) {
             Invoice.getInvoicesByReader(reader).forEach(System.out::println);
         } else {
             System.out.println("Reader not found.");
