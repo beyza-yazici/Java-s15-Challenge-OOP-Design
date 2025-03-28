@@ -7,7 +7,7 @@ public class Librarian extends Person{
     private String password;
 
     public Librarian(int id, String name, String email, String password) {
-        super(id, name, email);
+        super(id, name);
         this.password = password;
     }
 
