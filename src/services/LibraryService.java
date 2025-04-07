@@ -18,26 +18,53 @@ public class LibraryService {
         this.readerRepository = readerRepository;
     }
 
-    public boolean borrowBook(int bookId, int readerId){
+    public boolean borrowBook(int bookId, int readerId) {
         Book book = bookRepository.findBooksById(bookId);
-        Reader reader = readerRepository.findReaderById(readerId);
-        if(book != null && reader != null && book.isAvailable()){
-            if(reader.borrowBook(book)){
-                generateInvoice(bookId, readerId);
-                return true;
-            }
+        if (book == null) {
+            System.out.println("Error: Book not found with ID: " + bookId);
+            return false;
         }
-        return false;
+
+        Reader reader = readerRepository.findReaderById(readerId);
+        if (reader == null) {
+            System.out.println("Error: Reader not found with ID: " + readerId);
+            return false;
+        }
+
+        if (!book.isAvailable()) {
+            System.out.println("Error: Book is already borrowed by: " + book.getCurrentBorrower().getName());
+            return false;
+        }
+
+        book.setBorrower(reader);
+        return true;
     }
 
-    public void returnBook(int bookId, int readerId){
+    public boolean returnBook(int bookId, int readerId) {
         Book book = bookRepository.findBooksById(bookId);
-        Reader reader = readerRepository.findReaderById(readerId);
-        if(book != null && reader != null){
-            reader.returnBook(book);
-            Invoice invoice = new Invoice(book.getId(), reader, book, book.getPrice());
-            invoice.refundInvoice();
+        if (book == null) {
+            System.out.println("Error: Book not found with ID: " + bookId);
+            return false;
         }
+
+        Reader reader = readerRepository.findReaderById(readerId);
+        if (reader == null) {
+            System.out.println("Error: Reader not found with ID: " + readerId);
+            return false;
+        }
+
+        if (book.isAvailable()) {
+            System.out.println("Error: Book is not currently borrowed.");
+            return false;
+        }
+
+        if (book.getCurrentBorrower().getId() != readerId) {
+            System.out.println("Error: This book was not borrowed by this reader.");
+            return false;
+        }
+
+        book.setBorrower(null);
+        return true;
     }
 
     public void generateInvoice(int bookId, int readerId){
