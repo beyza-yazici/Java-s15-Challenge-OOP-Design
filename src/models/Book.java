@@ -9,9 +9,8 @@ public class Book {
     private String author;
     private String genre;
     private double price;
-    private boolean isAvailable;
     private LocalDate dateOfPurchase;
-    private Reader owner;
+    private Reader currentBorrower;
     private String edition;
 
 
@@ -21,10 +20,10 @@ public class Book {
         this.author = author;
         this.genre = genre;
         this.price = price;
-        this.isAvailable = true;
         this.dateOfPurchase = dateOfPurchase;
-        this.owner = null;
+        this.currentBorrower = null;
         this.edition = edition;
+
     }
 
 
@@ -32,6 +31,17 @@ public class Book {
         return id;
     }
 
+    public boolean isAvailable() {
+        return currentBorrower == null;
+    }
+
+    public void setBorrower(Reader borrower) {
+        this.currentBorrower = borrower;
+    }
+
+    public Reader getCurrentBorrower() {
+        return currentBorrower;
+    }
 
     public String getTitle() {
         return title;
@@ -52,31 +62,9 @@ public class Book {
         return price;
     }
 
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-
     public LocalDate getDateOfPurchase() {
         return dateOfPurchase;
     }
-
-
-    public Reader getOwner() {
-        return owner;
-    }
-
-
-    public void changeOwner(Reader newOwner) {
-        this.owner = newOwner;
-    }
-
 
     public String getEdition() {
         return edition;
@@ -87,7 +75,6 @@ public class Book {
         System.out.println(this.toString());
     }
 
-
     @Override
     public String toString() {
         return "Book{" +
@@ -96,11 +83,9 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", genre='" + genre + '\'' +
                 ", price=" + price +
-                ", isAvailable=" + isAvailable +
                 ", dateOfPurchase=" + dateOfPurchase +
-                ", owner=" + (owner != null ? owner.getName() : "None") +
+                ", status=" + (isAvailable() ? "Available" : "Borrowed by " + currentBorrower.getName()) +
                 ", edition='" + edition + '\'' +
                 '}';
     }
-
 }

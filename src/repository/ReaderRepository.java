@@ -5,7 +5,6 @@ import models.Reader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ReaderRepository {
     private Map<Integer, Reader> readerStorage = new HashMap<>();
@@ -25,7 +24,7 @@ public class ReaderRepository {
     }
 
     public List<Reader> findAll(){
-        return readerStorage.values().stream().collect(Collectors.toList());
+        return readerStorage.values().stream().toList();
     }
 
 }
