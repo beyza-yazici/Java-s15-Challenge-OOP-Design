@@ -3,19 +3,24 @@ package services;
 import models.Book;
 import models.Invoice;
 import models.Reader;
+import models.Transaction;
 import repository.BookRepository;
 import repository.ReaderRepository;
+import repository.TransactionRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class LibraryService {
 
     private BookRepository bookRepository;
     private ReaderRepository readerRepository;
+    private TransactionRepository transactionRepository;
 
-    public LibraryService(BookRepository bookRepository, ReaderRepository readerRepository) {
+    public LibraryService(BookRepository bookRepository, ReaderRepository readerRepository, TransactionRepository transactionRepository) {
         this.bookRepository = bookRepository;
         this.readerRepository = readerRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public boolean borrowBook(int bookId, int readerId) {
@@ -31,12 +36,15 @@ public class LibraryService {
             return false;
         }
 
-        if (!book.isAvailable()) {
-            System.out.println("Error: Book is already borrowed by: " + book.getCurrentBorrower().getName());
+        if (!reader.borrowBook(book)) {
             return false;
         }
 
-        book.setBorrower(reader);
+        Transaction transaction = new Transaction(book.getId(), book, reader, LocalDate.now());
+        Invoice invoice = new Invoice(transaction.getTransactionId(), reader, book, book.getPrice());
+        invoice.generateInvoice();
+        transactionRepository.save(transaction);
+
         return true;
     }
 
@@ -64,17 +72,27 @@ public class LibraryService {
         }
 
         book.setBorrower(null);
+
+        Transaction transaction = transactionRepository.findTransactionByBookAndReader(book, reader);
+        if (transaction != null) {
+            transaction.setReturnDate(LocalDate.now());
+            Invoice invoice = transactionRepository.findInvoiceByTransaction(transaction);
+            if (invoice != null) {
+                invoice.refundInvoice();
+                transactionRepository.removeInvoice(invoice);
+            }
+            transactionRepository.update(transaction);
+        }
         return true;
     }
 
-    public void generateInvoice(int bookId, int readerId){
-        Book book = bookRepository.findBooksById(bookId);
-        Reader reader = readerRepository.findReaderById(readerId);
-        if(book != null && reader != null){
-            Invoice invoice = new Invoice(book.getId(), reader, book, book.getPrice());
-            invoice.generateInvoice();
-
+    private Invoice findInvoiceByTransaction(Transaction transaction) {
+        for (Invoice invoice : Invoice.getInvoicesByReader(transaction.getReader())) {
+            if (invoice.getBook().equals(transaction.getBook())) {
+                return invoice;
+            }
         }
+        return null;
     }
 
     public Book searchBook(List<Book> books, String title){
