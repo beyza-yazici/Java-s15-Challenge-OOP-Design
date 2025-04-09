@@ -17,7 +17,8 @@ public class ConsoleApp {
 
     private static BookRepository bookRepository = new BookRepository();
     private static ReaderRepository readerRepository = new ReaderRepository();
-    private static LibraryService libraryService = new LibraryService(bookRepository, readerRepository);
+    private static TransactionRepository transactionRepository = new TransactionRepository();
+    private static LibraryService libraryService = new LibraryService(bookRepository, readerRepository, transactionRepository);
     private static TransactionService transactionService = new TransactionService(new TransactionRepository());
     private static Scanner scanner = new Scanner(System.in);
     private static LibraryManagementSystem libraryManagementSystem = new LibraryManagementSystem(bookRepository, readerRepository);
