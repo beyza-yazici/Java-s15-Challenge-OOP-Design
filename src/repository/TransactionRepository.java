@@ -38,7 +38,12 @@ public class TransactionRepository {
     }
 
     public void update(Transaction transaction) {
-
+        for (int i = 0; i < transactions.size(); i++) {
+            if (transactions.get(i).getTransactionId() == transaction.getTransactionId()) {
+                transactions.set(i, transaction);
+                break;
+            }
+        }
     }
 
     public void removeInvoice(Invoice invoice) {

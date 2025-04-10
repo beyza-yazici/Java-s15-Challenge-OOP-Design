@@ -5,10 +5,10 @@ import java.time.LocalDate;
 public class Faculty extends MemberRecord {
     private String department;
 
-    public Faculty(int memberId, String type, LocalDate dateOfMembership, String name, String address, String phoneNo, String department) {
-        super(memberId, type, dateOfMembership, name, address, phoneNo);
-        this.department = department;
+    public Faculty(int id, String name, String type, LocalDate dateOfMembership, int noBooksIssued, int maxBookLimit, String address, String phoneNo) {
+        super(id, name, type, dateOfMembership, noBooksIssued, maxBookLimit, address, phoneNo);
     }
+
 
     public String getDepartment() {
         return department;
