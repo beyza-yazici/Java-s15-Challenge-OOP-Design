@@ -66,20 +66,8 @@ public class Reader extends Person {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public List<Book> getBorrowedBooks() {
         return new ArrayList<>(borrowedBooks); // Defensive copy
-    }
-
-    public int getNumberOfBorrowedBooks() {
-        return borrowedBooks.size();
-    }
-
-    public boolean canBorrowMore() {
-        return borrowedBooks.size() < MAX_BOOKS;
     }
 
     public String whoYouAre() {

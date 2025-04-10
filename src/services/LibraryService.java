@@ -86,15 +86,6 @@ public class LibraryService {
         return true;
     }
 
-    private Invoice findInvoiceByTransaction(Transaction transaction) {
-        for (Invoice invoice : Invoice.getInvoicesByReader(transaction.getReader())) {
-            if (invoice.getBook().equals(transaction.getBook())) {
-                return invoice;
-            }
-        }
-        return null;
-    }
-
     public Book searchBook(List<Book> books, String title){
         for(Book book : books){
             if(book.getTitle().equalsIgnoreCase(title)){

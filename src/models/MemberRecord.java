@@ -2,29 +2,23 @@ package models;
 
 import java.time.LocalDate;
 
-public class MemberRecord {
-    private int memberId;
+public class MemberRecord extends Person {
+
     private String type;
     private LocalDate dateOfMembership;
     private int noBooksIssued;
     private int maxBookLimit;
-    private String name;
     private String address;
     private String phoneNo;
 
-    public MemberRecord(int memberId, String type, LocalDate dateOfMembership, String name, String address, String phoneNo) {
-        this.memberId = memberId;
+    public MemberRecord(int id, String name, String type, LocalDate dateOfMembership, int noBooksIssued, int maxBookLimit, String address, String phoneNo) {
+        super(id, name);
         this.type = type;
         this.dateOfMembership = dateOfMembership;
-        this.noBooksIssued = 0;
-        this.maxBookLimit = 5;
-        this.name = name;
+        this.noBooksIssued = noBooksIssued;
+        this.maxBookLimit = maxBookLimit;
         this.address = address;
         this.phoneNo = phoneNo;
-    }
-
-    public int getMemberId() {
-        return memberId;
     }
 
     public String getType() {
@@ -41,10 +35,6 @@ public class MemberRecord {
 
     public int getMaxBookLimit() {
         return maxBookLimit;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getAddress() {
@@ -76,14 +66,15 @@ public class MemberRecord {
     @Override
     public String toString() {
         return "MemberRecord{" +
-                "memberId=" + memberId +
-                ", type='" + type + '\'' +
+                "type='" + type + '\'' +
                 ", dateOfMembership=" + dateOfMembership +
                 ", noBooksIssued=" + noBooksIssued +
                 ", maxBookLimit=" + maxBookLimit +
-                ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
+                ", id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
+

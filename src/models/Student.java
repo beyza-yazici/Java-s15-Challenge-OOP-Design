@@ -5,10 +5,10 @@ import java.time.LocalDate;
 public class Student extends MemberRecord {
     private String major;
 
-    public Student(int memberId, String type, LocalDate dateOfMembership, String name, String address, String phoneNo, String major) {
-        super(memberId, type, dateOfMembership, name, address, phoneNo);
-        this.major = major;
+    public Student(int id, String name, String type, LocalDate dateOfMembership, int noBooksIssued, int maxBookLimit, String address, String phoneNo) {
+        super(id, name, type, dateOfMembership, noBooksIssued, maxBookLimit, address, phoneNo);
     }
+
 
     public String getMajor() {
         return major;
