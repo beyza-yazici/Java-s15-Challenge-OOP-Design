@@ -55,7 +55,7 @@ public class Reader extends Person {
         if (borrowedBooks.isEmpty()) {
             System.out.println("No books borrowed.");
         } else {
-            System.out.println("\nBorrowed books by " + getName() + ":");
+            System.out.println("Borrowed books by " + getName() + ":");
             for (Book book : borrowedBooks) {
                 System.out.println(book);
             }
