@@ -345,7 +345,7 @@ public class ConsoleApp {
 
             System.out.println("Current book details:");
             System.out.println(existingBook);
-            System.out.println("\nEnter new details (press Enter to keep current value):");
+            System.out.println("Enter new details (press Enter to keep current value):");
 
             System.out.print("Title [" + existingBook.getTitle() + "]: ");
             String title = scanner.nextLine();
@@ -405,7 +405,7 @@ public class ConsoleApp {
                 return;
             }
 
-            System.out.println("\nBook to be deleted:");
+            System.out.println("Book to be deleted:");
             System.out.println(bookToDelete);
 
             if (!bookToDelete.isAvailable()) {
@@ -414,7 +414,7 @@ public class ConsoleApp {
                 return;
             }
 
-            System.out.print("\nAre you sure you want to delete this book? (y/n): ");
+            System.out.print("Are you sure you want to delete this book? (y/n): ");
             String confirmation = scanner.nextLine().trim().toLowerCase();
 
             if (confirmation.equals("y")) {

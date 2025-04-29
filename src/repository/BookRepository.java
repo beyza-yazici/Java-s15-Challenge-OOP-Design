@@ -91,6 +91,6 @@ public class BookRepository {
     }
 
     public List<Book> findAll(){
-        return bookStorage.values().stream().collect(Collectors.toList());
+        return bookStorage.values().stream().toList();
     }
 }
